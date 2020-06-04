@@ -36,6 +36,10 @@ import Log from './lib/log';
  * 日记管理
  */
 import Perf from './lib/perf';
+/**
+ * web3引入
+ */
+const Web3 = require( 'web3' );
 
 Vue.use(ElementUI);
 Vue.use(Permission, store);
@@ -45,6 +49,9 @@ Vue.use(Log, {
   enable: false,
 });
 Vue.use(Perf, false);
+
+Vue.prototype.$web3 = new Web3();
+
 Vue.config.productionTip = false
 
 new Vue({
