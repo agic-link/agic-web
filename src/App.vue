@@ -1,15 +1,30 @@
 <template>
   <div id="app">
-      <router-view/>
+    <el-container>
+    	<!-- 顶部 -->
+    	<el-header>
+  			<Header/>
+    	</el-header>
+    	<router-view/>
+    </el-container>
   </div>
 </template>
 
 <script>
+import Header from './views/header.vue'
+
 export default {
+	components: {
+		Header
+	},
   name: 'App'
 }
 </script>
 
-<style scoped>
-#app {}
+<style lang="scss">
+#app {
+	.el-header {
+		padding: 0rem;
+	}
+}
 </style>

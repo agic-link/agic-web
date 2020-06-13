@@ -7,9 +7,7 @@
 import axios from 'axios';
 import BrowserMatch from '../mixins/browser.js'
 import store from '../store'
-import {
-    CLIENT_ID
-} from '../config'
+
 let logs = [];
 let timer = null;
 const config = {
@@ -64,7 +62,6 @@ function log(...args) {
             OS: BrowserMatch.OS
         };
         params.userinfo = userinfo;
-        params.CLIENT_ID = CLIENT_ID;
         logs.push(JSON.stringify(params));
     }
 }

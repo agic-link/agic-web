@@ -4,6 +4,7 @@ import ElementUI from 'element-ui';
  * 全局样式
  */
 import './assets/styles/index.scss';
+import 'element-ui/lib/theme-chalk/index.css';
 /**
  * 入口组件
  */
