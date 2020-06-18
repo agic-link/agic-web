@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wallet Connecting</title>
+</head>
+<body>
+<div>
+    <button class="enableEthereumButton">Enable Ethereum</button>
+    <h2>Account: <span class="showAccount"></span></h2>
+</div>
+</body>
+<script type="text/javascript">
+
+    window.addEventListener('load', function () {
+
+        let ethereum = window.ethereum;
+        if (typeof ethereum == 'undefined') {
+            alert('请安装MetaMask插件并解锁您的以太坊账户');
+        }
+        console.log(window.ethereum);
+    });
+    const ethereumButton = document.querySelector('.enableEthereumButton');
+    const showAccount = document.querySelector('.showAccount');
+
+    ethereumButton.addEventListener('click', () => {
+        getAccount();
+    });
+
+    async function getAccount() {
+        const accounts = await ethereum.enable();
+        const account = accounts[0];
+        console.log(account);
+        showAccount.innerHTML = account;
+    }
+</script>
+</html>
