@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 const Home =resolve => require(['@/views/home'], resolve);
 const My =resolve => require(['@/views/my'], resolve);
+const HomeA =resolve => require(['@/views/homeA'], resolve);
 
 
 Vue.use(Router)
@@ -19,6 +20,14 @@ export default new Router({
       path: '/my',
       name: 'My',
       component: My
+    },
+    {
+      path: '/homeA',
+      name: 'HomeA',
+      component: HomeA,
+      meta: {
+        notHead: true
+      }
     }
   ]
 })
