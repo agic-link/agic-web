@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
     	<!-- 顶部 -->
-    	<el-header>
+    	<el-header v-if="isShow">
   			<Header/>
     	</el-header>
     	<router-view/>
@@ -17,7 +17,21 @@ export default {
 	components: {
 		Header
 	},
-  name: 'App'
+  name: 'App',
+  data () {
+    var isShow = !this.$route.meta.notHead;
+    return {
+      isShow: isShow
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(val){
+        this.isShow = !this.$route.meta.notHead;
+      },
+      deep: true
+    }
+  },
 }
 </script>
 

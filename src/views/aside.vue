@@ -156,6 +156,28 @@
 			border-bottom: solid 0.05rem $--color-border;
 		}
 	}
+	.form_label {
+		width: 100%;
+		margin-top: 1rem;
+		margin-bottom: 0.5rem;
+		position: relative;
+
+		.number	{
+			color: $--color-gray;
+		}
+		.max {
+			position: absolute;
+			top: 50%;
+			right: 0rem;
+			transform: translate(0, -50%);
+			color: $--color-gray;
+			cursor: pointer;
+
+			&:hover {
+				color: #fff;
+			}
+		}
+	}
 	.table {
 		width: 100%;
 		background: none;
