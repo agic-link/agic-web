@@ -19,6 +19,11 @@ export default {
 	components: {
 		Aside, Main
 	},
+  data() {
+    return {
+
+    }
+  }
 }
 </script>
 

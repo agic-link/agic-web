@@ -54,11 +54,20 @@
 </template>
 
 <script>
+import ABI from '@/config/ABI.json'
+import { AGRE_ADDRESS } from '@/config/index'
+import { contractInstance } from '@/util/contractInstance'
+
 	export default {
 		data() {
+    // console.log(ABI)
+
 			return {
 				activeIndex: "1"
 			}
+		},
+		created() {
+			this.getMetacoin();
 		},
 		methods: {
 			// 标签切换
@@ -67,8 +76,13 @@
 			},
 			toPlay() {
 				this.$router.push({name:'Home'});
-			}
-		}
+			},
+	    // 调用合约合约对象
+	    getMetacoin() {
+	    	console.log(contractInstance.methods.totalPledgeEth)
+	    	// contractInstance.at()
+	    }
+	  }
 	}
 </script>
 
