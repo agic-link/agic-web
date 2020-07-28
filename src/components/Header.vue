@@ -40,7 +40,7 @@
         },
         methods: {
             accountsChanged(accounts) {
-                this.wallet = accounts[0];
+                this.wallet = accounts[0] == null ? '' : accounts[0];
                 this.shortWallet = StringUtils.shortenKey(this.wallet);
             },
             chainChanged(networkId) {
