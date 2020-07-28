@@ -1,44 +1,27 @@
 <template>
   <div id="app">
-    <el-container>
-    	<!-- 顶部 -->
-    	<el-header v-if="isShow">
-  			<Header/>
-    	</el-header>
-    	<router-view/>
-    </el-container>
+    <Home msg="This is Home"/>
   </div>
 </template>
 
 <script>
-import Header from './views/header.vue'
+import Home from './views/Home.vue'
 
 export default {
-	components: {
-		Header
-	},
-  name: 'App',
-  data () {
-    var isShow = !this.$route.meta.notHead;
-    return {
-      isShow: isShow
-    }
-  },
-  watch: {
-    $route: {
-      handler: function(val){
-        this.isShow = !this.$route.meta.notHead;
-      },
-      deep: true
-    }
-  },
+  name: 'app',
+  components: {
+    Home
+  }
 }
 </script>
 
-<style lang="scss">
+<style>
 #app {
-	.el-header {
-		padding: 0rem;
-	}
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 20px;
 }
 </style>

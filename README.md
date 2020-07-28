@@ -1,21 +1,24 @@
-# vue_pc
+# agic-web-new
 
-## Build Setup
-
-``` bash
-# 安装依赖
-npm install
-
-# 本地运行测试环境
-npm run serve
-
-# 本地运行正式环境
-npm run start
-
-# 正式环境带debug提示
-npm run build-debug
-
-# 打包正式环境
-npm run build
-
+## Project setup
 ```
+yarn install
+```
+
+### Compiles and hot-reloads for development
+```
+yarn serve
+```
+
+### Compiles and minifies for production
+```
+yarn build
+```
+
+### Lints and fixes files
+```
+yarn lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

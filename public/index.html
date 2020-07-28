@@ -5,38 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>vue_pc</title>
-    <style type="text/css">
-      html{ font-size: 20px;  }
-      html,body,#app,.el-container { padding: 0rem; margin: 0rem; height: 100% }
-    </style>
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script type="text/javascript">
-      // window.addEventListener('load', function () {
-
-        // 获取matemask插件
-        let ethereum = window.ethereum;
-        if (typeof ethereum == 'undefined') {
-            var mymessage=confirm("请安装MetaMask插件并解锁您的以太坊账户");
-           if(mymessage==true)
-           {
-              window.open('https://metamask.io/', 'newwindow')
-           }
-        }
-        // 获取web3
-        if (typeof web3 !== 'undefined') {
-          web3 = new Web3(web3.currentProvider);
-        } else {
-          // set the provider you want from Web3.providers
-          web3 = new Web3(new Web3.providers.HttpProvider("https://api.infura.io/v1/jsonrpc/mainnet"));
-        }
-      // });
-    </script>
+    <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but vue_pc doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->

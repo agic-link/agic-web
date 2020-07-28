@@ -1,0 +1,324 @@
+<template>
+    <div>
+        <el-row type="flex" justify="center">
+            <el-col :lg="{span:7}" :xs="{span:12}">
+                <div class="body-title">
+                    AGIC<br>
+                    质押生息代币<br>
+                    <p>质押获得的agic会自动生息，同时也可以使用agic再次去交易</p>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row type="flex" justify="center">
+            <el-col :lg="{span:4}" :xs="{span:15}">
+                <div class="home-button">
+                    <el-button type="primary" v-on:click="deposit()">获得AGIC</el-button>
+                    <el-button class="buttons" type="primary" v-on:click="redeem()">赎回ETH</el-button>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row type="flex" justify="center">
+            <el-col :lg="{span:7}" :xs="{span:18}">
+                <div class="agic-table">
+                    <table>
+                        <tr>
+                            <td class="left"> 质押eth</td>
+                            <td class="right">{{totalPledgeEth}}</td>
+                        </tr>
+                        <tr>
+                            <td class="left">总铸币</td>
+                            <td class="right">{{totalSupply}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="xiao">您的信息</div>
+                <div class="user-table">
+                    <table>
+                        <tr>
+                            <td class="left">钱包余额</td>
+                            <td class="right">{{walletEth}} ETH</td>
+                        </tr>
+                        <tr>
+                            <td class="left"> 余额</td>
+                            <td class="right">{{balanceOf}} AGIC</td>
+                        </tr>
+                        <tr>
+                            <td class="left"> 质押eth</td>
+                            <td class="right">{{pledgeEth}} ETH</td>
+                        </tr>
+                        <tr>
+                            <td class="left"> 当前eth</td>
+                            <td class="right">{{nowPledgeEth}} ETH</td>
+                        </tr>
+                        <tr>
+                            <td class="left"> 利息</td>
+                            <td class="right">{{interests}} ETH</td>
+                        </tr>
+                    </table>
+                </div>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+
+<script>
+
+    import {Decimal} from "decimal.js";
+
+    const agic = require('../web3/agic.js')
+    const StringUtils = require("../util/StringUtils.js")
+
+    export default {
+        name: 'HomeBody',
+        created() {
+            agic.checkMetamask();
+            this.getData();
+            ethereum.on('accountsChanged', this.accountsChanged);
+            ethereum.on('chainChanged', this.chainChanged);
+        },
+        mounted() {
+            this.timer = setInterval(this.getData, 2000);
+            this.balanceOfTimer = setInterval(this.getBalanceOf, 1000);
+        },
+        beforeDestroy() {
+            clearInterval(this.timer);
+            clearInterval(this.balanceOfTimer);
+        },
+        data() {
+            return {
+                network: 0,
+                wallet: '',
+                totalPledgeEth: 0,
+                totalSupply: 0,
+                walletEth: 0,
+                pledgeEth: '0',
+                balanceOf: '0',
+                interests: '0',
+                nowPledgeEth: 0,
+            }
+        },
+        methods: {
+            getData() {
+                if (agic.agicInstance === undefined) {
+                    agic.checkMetamask();
+                } else {
+                    agic.totalSupply((err, data) => {
+                        this.totalSupply = data / 1e18;
+                    });
+                    agic.totalPledgeEth((err, data) => {
+                        this.totalPledgeEth = data / 1e18;
+                    });
+                }
+            },
+            getAccounts() {
+                agic.getAddress((error, result) => {
+                    if (error != null) {
+                        console.log(error.message);
+                        return;
+                    }
+                    this.wallet = result.result[0];
+                    agic.createInstance(this.network);
+                    if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
+                        this.getBalanceOf();
+                    }
+                });
+            },
+            getBalanceOf() {
+                const wallet = sessionStorage.getItem("wallet");
+                if (StringUtils.isBlank(wallet)) {
+                    return;
+                } else {
+                    this.wallet = wallet;
+                }
+                if (StringUtils.isNotBlank(this.wallet)) {
+                    agic.getWalletBalance(this.wallet, (error, data) => {
+                        if (error != null) {
+                            console.log(error);
+                            return;
+                        }
+                        this.walletEth = new Decimal(data.result).dividedBy(1e18).toNumber();
+                    })
+                }
+                if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
+                    agic.getBalanceOf(this.wallet, (error, data) => {
+                        if (error != null) {
+                            console.log(error);
+                            return;
+                        }
+                        this.balanceOf = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
+                        this.nowPledgeEth = this.balanceOf / 4;
+                    })
+                    agic.getPledgeEth(this.wallet, (error, data) => {
+                        if (error != null) {
+                            console.log(error);
+                            return;
+                        }
+                        this.pledgeEth = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
+                    })
+                    agic.getInterestAmount((error, data) => {
+                        if (error != null) {
+                            console.log(error);
+                            return;
+                        }
+                        this.interests = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
+                    })
+                }
+            },
+            accountsChanged(accounts) {
+                this.wallet = accounts[0];
+                if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
+                    this.getBalanceOf();
+                } else {
+                    this.balanceOf = 0;
+                    this.pledgeEth = 0;
+                    this.nowPledgeEth = 0;
+                    this.interests = 0;
+                }
+            },
+            chainChanged(networkId) {
+                this.network = new Decimal(networkId).toNumber();
+                agic.createInstance(this.network);
+                this.getData()
+                if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
+                    this.getBalanceOf();
+                } else {
+                    this.balanceOf = 0;
+                    this.pledgeEth = 0;
+                    this.nowPledgeEth = 0;
+                    this.interests = 0;
+                }
+            },
+            deposit() {
+                if (StringUtils.isBlank(this.wallet)) {
+                    this.getAccounts();
+                }
+                if (this.walletEth !== '') {
+                    this.$prompt('请输入质押eth数量', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /^[0-9]+(.[0-9]{1,18})?$/,
+                        inputErrorMessage: '数量格式不正确'
+                    }).then(({value}) => {
+                        if (value > this.walletEth) {
+                            this.errorMsg("没有这么多eth");
+                            return;
+                        }
+                        agic.doDeposit(value, (err, data) => {
+                            if (err != null) {
+                                console.log(err)
+                                return
+                            }
+                            this.$message({
+                                type: 'success',
+                                message: '已提交,订单号: ' + data,
+                                duration: 5000
+                            });
+                        });
+                    }).catch(() => {
+                        console.log("cancel deposit")
+                    });
+                }
+            },
+            redeem() {
+                agic.redeem();
+            },
+            errorMsg(text) {
+                this.$message({
+                    showClose: true,
+                    message: text,
+                    type: 'error',
+                    duration: 3000
+                });
+            },
+        }
+    }
+</script>
+
+<style lang="scss">
+    .body-title {
+        padding-top: 30px;
+        text-align: center;
+        font-size: 0.5rem;
+
+        p {
+            text-align: center;
+            font-size: 0.25rem;
+            margin: 0;
+        }
+    }
+
+    .home-button {
+
+        font-size: 0.25rem;
+        padding-top: 0.25rem;
+
+    }
+
+    .agic-table {
+        padding-top: 0.5rem;
+        font-size: 0.15rem;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 1px solid;
+            border-bottom: 1px solid black;
+
+            td {
+                border: 0;
+                padding-top: 0.1rem;
+                padding-bottom: 0.1rem;
+            }
+
+            .left {
+                width: 30%;
+                text-align: left;
+                padding-left: 0.25rem;
+                border-right: 1px solid #dbdbdb;
+            }
+
+            .right {
+                width: 70%;
+                text-align: right;
+                padding-right: 0.25rem;
+            }
+        }
+    }
+
+    .user-table {
+        padding-top: 0.1rem;
+        font-size: 0.15rem;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 1px solid;
+            border-bottom: 1px solid black;
+
+            td {
+                border: 0;
+                padding-top: 0.1rem;
+                padding-bottom: 0.1rem;
+            }
+
+            .left {
+                width: 30%;
+                text-align: left;
+                padding-left: 0.25rem;
+                border-right: 1px solid #dbdbdb;
+            }
+
+            .right {
+                width: 70%;
+                text-align: right;
+                padding-right: 0.25rem;
+            }
+        }
+    }
+
+    .xiao {
+        padding-top: 0.3rem;
+        font-size: 0.2rem;
+        text-align: left;
+    }
+</style>
