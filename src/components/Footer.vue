@@ -2,13 +2,13 @@
     <div class="footer-title">
         <el-row type="flex" justify="center">
             <el-col :span="8">
-                <div>资源</div>
-                <div class="content" @click="openWindows('/#/PrivacyPolicy')">隐私政策</div>
+                <div>{{ $t('resources') }}</div>
+                <div class="content" @click="openWindows('/#/PrivacyPolicy')">{{ $t('privacyPolicy') }}</div>
             </el-col>
             <el-col :span="8">
                 <div>开发者</div>
                 <div class="content" @click="openWindows('https://github.com/nipeak')">Github</div>
-                <div class="content" @click="openWindows('https://github.com/nipeak/agic-protocol')">智能合约</div>
+                <div class="content" @click="openWindows('https://github.com/nipeak/agic-protocol')">{{ $t('contract') }}</div>
             </el-col>
             <el-col :span="8">
                 <div>社交媒体</div>

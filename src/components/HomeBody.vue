@@ -4,16 +4,16 @@
             <el-col :lg="{span:7}" :xs="{span:12}">
                 <div class="body-title">
                     AGIC<br>
-                    质押生息代币<br>
-                    <p>质押获得的agic会自动生息，同时也可以使用agic再次去交易</p>
+                    {{ $t('shortTitle') }}<br>
+                    <p>{{ $t('title') }}</p>
                 </div>
             </el-col>
         </el-row>
         <el-row type="flex" justify="center">
             <el-col :lg="{span:4}" :xs="{span:15}">
                 <div class="home-button">
-                    <el-button type="primary" v-on:click="deposit()">获得AGIC</el-button>
-                    <el-button class="buttons" type="primary" v-on:click="redeem()">赎回ETH</el-button>
+                    <el-button type="primary" v-on:click="deposit()">{{ $t('getAgic') }}</el-button>
+                    <el-button class="buttons" type="primary" v-on:click="redeem()">{{ $t('redeemEth') }}</el-button>
                 </div>
             </el-col>
         </el-row>
@@ -22,36 +22,36 @@
                 <div class="agic-table">
                     <table>
                         <tr>
-                            <td class="left"> 质押eth</td>
+                            <td class="left">{{ $t('pledgeEth') }}</td>
                             <td class="right">{{totalPledgeEth}}</td>
                         </tr>
                         <tr>
-                            <td class="left">总铸币</td>
+                            <td class="left">{{ $t('totalSupply') }}</td>
                             <td class="right">{{totalSupply}}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="xiao">您的信息</div>
+                <div class="xiao">{{ $t('userInfo') }}</div>
                 <div class="user-table">
                     <table>
                         <tr>
-                            <td class="left">钱包余额</td>
+                            <td class="left">{{ $t('walletBalance') }}</td>
                             <td class="right">{{walletEth}} ETH</td>
                         </tr>
                         <tr>
-                            <td class="left"> 余额</td>
+                            <td class="left">{{ $t('balance') }}</td>
                             <td class="right">{{balanceOf}} AGIC</td>
                         </tr>
                         <tr>
-                            <td class="left"> 质押eth</td>
+                            <td class="left">{{ $t('pledgeEth') }}</td>
                             <td class="right">{{pledgeEth}} ETH</td>
                         </tr>
                         <tr>
-                            <td class="left"> 当前eth</td>
+                            <td class="left">{{ $t('nowEth') }}</td>
                             <td class="right">{{nowPledgeEth}} ETH</td>
                         </tr>
                         <tr>
-                            <td class="left"> 利息</td>
+                            <td class="left">{{ $t('interest') }}</td>
                             <td class="right">{{interests}} ETH</td>
                         </tr>
                     </table>
@@ -193,14 +193,14 @@
                     this.getAccounts();
                 }
                 if (this.walletEth !== '') {
-                    this.$prompt('请输入质押eth数量', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
+                    this.$prompt(this.$t('prompt.content'), this.$t('prompt.title'), {
+                        confirmButtonText: this.$t('prompt.determine'),
+                        cancelButtonText: this.$t('prompt.cancel'),
                         inputPattern: /^[0-9]+(.[0-9]{1,18})?$/,
-                        inputErrorMessage: '数量格式不正确'
+                        inputErrorMessage: this.$t('prompt.inputError')
                     }).then(({value}) => {
                         if (value > this.walletEth) {
-                            this.errorMsg("没有这么多eth");
+                            this.errorMsg(this.$t('notSoMuch'));
                             return;
                         }
                         agic.doDeposit(value, (err, data) => {
@@ -210,7 +210,7 @@
                             }
                             this.$message({
                                 type: 'success',
-                                message: '已提交,订单号: ' + data,
+                                message: this.$t('submitted') + data,
                                 duration: 5000
                             });
                         });

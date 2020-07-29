@@ -10,7 +10,7 @@
                 <div class="float-right" v-show="wallet!==''">{{networkName}}</div>
                 <div class="yuan float-right" v-show="wallet!==''"></div>
                 <el-button v-show="wallet===''" type="primary" v-on:click="getAccounts()">
-                    链接钱包
+                    {{ $t('linkWallet') }}
                 </el-button>
             </div>
         </el-col>
