@@ -69,30 +69,6 @@ export function doDeposit(value, callback) {
     }
 }
 
-export function redeem() {
-    agicInstance.redeem(function (err, data) {
-        if (err != null) {
-            console.log(err)
-            return;
-        }
-        console.log(data)
-    });
+export function redeem(callback) {
+    agicInstance.redeem(callback);
 }
-
-// //事件需要重新加载余额和交易订单等
-// .ethereum.on('accountsChanged', function (accounts) {
-//     address = accounts[0];
-//     console.log(address)
-//     if (address !== undefined) {
-//         getBalanceOf(address);
-//     }
-// });
-//
-// .ethereum.on('networkChanged', function (networkId) {
-//     network = networkId;
-//     console.log(networkId);
-//     createInstance();
-//     if (address !== undefined) {
-//         getBalanceOf(address);
-//     }
-// });

@@ -18,12 +18,14 @@ const zh = {
         cancel: '取消',
         inputError: '数量格式不正确'
     },
-    notSoMuch: '没有那么多eth',
+    notSoMuchETH: '没有那么多eth',
+    notSoMuchBalance: '当前账户没有余额',
     submitted: '已提交,订单号:',
     resources: '资源',
     privacyPolicy: '隐私政策',
     contract: '智能合约',
-    developer:'开发者',
-    social:'社交媒体'
+    developer: '开发者',
+    social: '社交媒体',
+    error: '错误'
 }
 export default zh;

@@ -46,7 +46,7 @@
             chainChanged(networkId) {
                 this.network = new Decimal(networkId).toString();
                 this.networkName = agic.getNetworkName(this.network);
-                // sessionStorage.setItem("network", this.network);
+                sessionStorage.setItem("network", this.network);
             },
             getAccounts() {
                 agic.getAddress((error, result) => {
@@ -64,7 +64,7 @@
                         }
                         this.network = new Decimal(result.result).toString();
                         this.networkName = agic.getNetworkName(this.network);
-                        // sessionStorage.setItem("network", this.network);
+                        sessionStorage.setItem("network", this.network);
                     });
                 });
             }

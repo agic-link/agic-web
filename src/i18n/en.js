@@ -18,12 +18,14 @@ const en = {
         cancel: 'Cancel',
         inputError: 'Incorrect quantity format'
     },
-    notSoMuch: 'Not so much ETH',
+    notSoMuchETH: 'Not so much ETH',
+    notSoMuchBalance: 'Not so much Balance',
     submitted: 'Submitted, Order Number:',
     resources: 'Resources',
     privacyPolicy: 'Privacy Policy',
     contract: 'contract',
-    developer:'Developer',
-    social:'Social'
+    developer: 'Developer',
+    social: 'Social',
+    error: 'error'
 }
 export default en;

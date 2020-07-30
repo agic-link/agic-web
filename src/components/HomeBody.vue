@@ -208,7 +208,7 @@ export default {
                     inputErrorMessage: this.$t('prompt.inputError')
                 }).then(({value}) => {
                     if (value > this.walletEth) {
-                        this.errorMsg(this.$t('notSoMuch'));
+                        this.errorMsg(this.$t('error'), this.$t('notSoMuchETH'));
                         return;
                     }
                     agic.doDeposit(value, (err, data) => {
@@ -228,14 +228,34 @@ export default {
             }
         },
         redeem() {
-            agic.redeem();
+            agic.getBalanceOf(this.wallet, (error, data) => {
+                if (error != null) {
+                    console.log(error);
+                    return;
+                }
+                const balanceOf = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
+                if (balanceOf <= 0) {
+                    this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
+                    return;
+                }
+                agic.redeem((error, data) => {
+                    if (error != null) {
+                        console.log(error);
+                        return;
+                    }
+                    this.$message({
+                        type: 'success',
+                        message: this.$t('submitted') + data,
+                        duration: 5000
+                    });
+                });
+            })
+
         },
-        errorMsg(text) {
-            this.$message({
-                showClose: true,
-                message: text,
-                type: 'error',
-                duration: 3000
+        errorMsg(title, text) {
+            this.$notify.error({
+                title: title,
+                message: text
             });
         },
     }
