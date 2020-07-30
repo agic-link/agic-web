@@ -9,7 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(VueI18n)
 
 const i18n = new VueI18n({
-    locale: localStorage.getItem('locale')  || 'zh',
+    locale: localStorage.getItem('locale') || navigator.language === 'zh-CN' ? 'zh' : 'en' || 'zh',
     messages: {
         zh: zhLocale,
         en: enLocale

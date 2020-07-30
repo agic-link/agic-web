@@ -18,7 +18,7 @@
             </el-col>
         </el-row>
         <el-row type="flex" justify="center">
-            <el-col :lg="{span:4}" :xs="{span:18}">
+            <el-col :lg="{span:4}" :xs="{span:24}">
                 <div class="home-button">
                     <el-button type="primary" v-on:click="deposit()">{{ $t('getAgic') }}</el-button>
                     <el-button class="buttons" type="primary" v-on:click="redeem()">{{ $t('redeemEth') }}</el-button>
@@ -107,9 +107,7 @@ export default {
     },
     methods: {
         getData() {
-            if (agic.agicInstance === undefined) {
-                agic.checkMetamask();
-            } else {
+            if (agic.agicInstance !== undefined) {
                 agic.totalSupply((err, data) => {
                     this.totalSupply = data / 1e18;
                 });
@@ -201,7 +199,7 @@ export default {
                 this.getAccounts();
             }
             if (this.walletEth !== '') {
-                this.$prompt(this.$t('prompt.content'), this.$t('prompt.title'), {
+                this.$prompt(this.$t('prompt.content').toString(), this.$t('prompt.title').toString(), {
                     confirmButtonText: this.$t('prompt.determine'),
                     cancelButtonText: this.$t('prompt.cancel'),
                     inputPattern: /^[0-9]+(.[0-9]{1,18})?$/,
@@ -228,6 +226,9 @@ export default {
             }
         },
         redeem() {
+            if (StringUtils.isBlank(this.wallet)) {
+                this.getAccounts();
+            }
             agic.getBalanceOf(this.wallet, (error, data) => {
                 if (error != null) {
                     console.log(error);
@@ -263,6 +264,12 @@ export default {
 </script>
 
 <style lang="scss">
+
+@media screen and (max-width: 500px) {
+    .el-message-box {
+        width: 80% !important;
+    }
+}
 
 .body-name {
     padding-top: 30px;

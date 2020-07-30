@@ -19,7 +19,7 @@
             </el-col>
         </el-row>
         <el-row type="flex" justify="center">
-            <el-col :span="4" :offset="18" style="padding-top: 30px">
+            <el-col :span="6" :offset="18" style="padding-top: 30px">
                 <div>
                     <el-dropdown @command="handleCommand" trigger="click">
                         <span class="el-dropdown-link">
