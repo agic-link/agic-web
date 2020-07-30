@@ -13,7 +13,7 @@ const zh = {
     interest: '利息',
     prompt: {
         content: '请输入质押eth数量',
-        title: '提示',
+        title: '',
         determine: '确定',
         cancel: '取消',
         inputError: '数量格式不正确'
@@ -22,6 +22,8 @@ const zh = {
     submitted: '已提交,订单号:',
     resources: '资源',
     privacyPolicy: '隐私政策',
-    contract: '智能合约'
+    contract: '智能合约',
+    developer:'开发者',
+    social:'社交媒体'
 }
 export default zh;
