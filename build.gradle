@@ -1,0 +1,45 @@
+buildscript {
+  repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.bmuschko:gradle-docker-plugin:3.2.8'
+  }
+}
+
+apply plugin: 'java'
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+group 'link.agic'
+
+repositories {
+  mavenLocal()
+  jcenter()
+  maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+}
+
+docker {
+  registryCredentials {
+    url = 'https://registry.cn-beijing.aliyuncs.com'
+    username = project.hasProperty('myDockerUser') ? project.property('myDockerUser') : '<myDockerUser>'
+    password = project.hasProperty('myDockerPassword') ? project.property('myDockerPassword') : '<myDockerPassword>'
+  }
+}
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import java.text.SimpleDateFormat
+
+ext {
+  dockerImageName = 'registry.cn-beijing.aliyuncs.com/wzm/agic-page:' + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
+}
+
+task dockerBuild(type: DockerBuildImage) {
+  inputDir = file('dist')
+  tag = dockerImageName
+}
+
+task dockerPush(type: DockerPushImage, dependsOn: dockerBuild) {
+  imageName = dockerBuild.tag
+}

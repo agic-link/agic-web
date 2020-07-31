@@ -1,5 +1,12 @@
 <template>
     <div>
+        <el-row ype="flex" justify="center" style="margin-top: 10px">
+            <el-col :span="24">
+                <el-alert style="height: 40px;font-size: 10px" :title="$t('network')" type="warning" center
+                          show-icon>
+                </el-alert>
+            </el-col>
+        </el-row>
         <el-row type="flex" justify="center">
             <el-col :lg="{span:7}" :xs="{span:12}">
                 <div class="body-name">

@@ -23,8 +23,6 @@ const agic = require('../web3/agic.js')
 const StringUtils = require("../util/StringUtils.js")
 import {Decimal} from 'decimal.js';
 
-console.log(window.ethereum)
-
 export default {
     name: 'Header',
     created() {
@@ -56,7 +54,6 @@ export default {
                     console.log(error.message);
                     return;
                 }
-                console.log(result)
                 this.wallet = result.result[0];
                 this.shortWallet = StringUtils.shortenKey(this.wallet);
                 sessionStorage.setItem("wallet", this.wallet);

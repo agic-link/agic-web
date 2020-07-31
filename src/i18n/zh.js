@@ -26,6 +26,7 @@ const zh = {
     contract: '智能合约',
     developer: '开发者',
     social: '社交媒体',
-    error: '错误'
+    error: '错误',
+    network:'现在只接入了Ropsten NetWork'
 }
 export default zh;

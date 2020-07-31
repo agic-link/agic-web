@@ -10,7 +10,6 @@ export function checkMetamask() {
         return;
     }
     web3 = new Web3(ethereum);
-    console.log(web3)
     Agic = web3.eth.contract(config.abi);
     getNetwork((error, result) => {
         createInstance(result.result);

@@ -26,6 +26,7 @@ const en = {
     contract: 'contract',
     developer: 'Developer',
     social: 'Social',
-    error: 'error'
+    error: 'error',
+    network:'Now only Ropsten NetWork is connected'
 }
 export default en;
