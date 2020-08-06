@@ -1,13 +1,13 @@
 (function (doc, win) {
-    var docEl = doc.documentElement,
+    const docEl = doc.documentElement,
         resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
         recalc = function () {
-            var clientWidth = docEl.clientWidth;
+            const clientWidth = docEl.clientWidth;
             if (!clientWidth) return;
-            if (clientWidth >= 750) {
+            if (clientWidth >= 500) {
                 docEl.style.fontSize = '100px';
             } else {
-                docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+                docEl.style.fontSize = 100 * (clientWidth / 500) + 'px';
             }
         };
     if (!doc.addEventListener) return;

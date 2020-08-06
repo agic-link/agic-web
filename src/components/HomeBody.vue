@@ -25,10 +25,26 @@
             </el-col>
         </el-row>
         <el-row type="flex" justify="center">
-            <el-col :lg="{span:4}" :xs="{span:24}">
+            <el-col :lg="{span:8}" :xs="{span:24}">
                 <div class="home-button">
                     <el-button type="primary" v-on:click="deposit()">{{ $t('getAgic') }}</el-button>
-                    <el-button class="buttons" type="primary" v-on:click="redeem()">{{ $t('redeemEth') }}</el-button>
+                    <el-button type="primary" v-on:click="redeem()">{{ $t('redeemEth') }}</el-button>
+                    <el-button type="primary" @click="getTransfer()">{{ $t('transfer') }}</el-button>
+                    <el-dialog title="交易" :visible.sync="dialogFormVisible" top="30vh" center>
+                        <el-form :model="form">
+                            <el-form-item :label="$t('recipient')" :label-width="formLabelWidth">
+                                <el-input v-model="form.address" autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item :label="$t('amount')" :label-width="formLabelWidth">
+                                <el-input v-model="form.amount" autocomplete="off"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">{{ $t('prompt.cancel') }}</el-button>
+                            <el-button type="primary" @click="transfer()">{{ $t('prompt.determine') }}
+                            </el-button>
+                        </div>
+                    </el-dialog>
                 </div>
             </el-col>
         </el-row>
@@ -106,10 +122,16 @@ export default {
             totalPledgeEth: 0,
             totalSupply: 0,
             walletEth: 0,
-            pledgeEth: '0',
-            balanceOf: '0',
-            interests: '0',
+            pledgeEth: 0,
+            balanceOf: 0,
+            interests: 0,
             nowPledgeEth: 0,
+            dialogFormVisible: false,
+            form: {
+                address: '',
+                amount: ''
+            },
+            formLabelWidth: '100px'
         }
     },
     methods: {
@@ -137,12 +159,6 @@ export default {
             });
         },
         getBalanceOf() {
-            const wallet = sessionStorage.getItem("wallet");
-            if (StringUtils.isBlank(wallet)) {
-                return;
-            } else {
-                this.wallet = wallet;
-            }
             if (StringUtils.isNotBlank(this.wallet)) {
                 agic.getWalletBalance(this.wallet, (error, data) => {
                     if (error != null) {
@@ -205,51 +221,20 @@ export default {
             if (StringUtils.isBlank(this.wallet)) {
                 this.getAccounts();
             }
-            if (this.walletEth !== '') {
-                this.$prompt(this.$t('prompt.content').toString(), this.$t('prompt.title').toString(), {
-                    confirmButtonText: this.$t('prompt.determine'),
-                    cancelButtonText: this.$t('prompt.cancel'),
-                    inputPattern: /^[0-9]+(.[0-9]{1,18})?$/,
-                    inputErrorMessage: this.$t('prompt.inputError')
-                }).then(({value}) => {
-                    if (value > this.walletEth) {
-                        this.errorMsg(this.$t('error'), this.$t('notSoMuchETH'));
-                        return;
-                    }
-                    agic.doDeposit(value, (err, data) => {
-                        if (err != null) {
-                            console.log(err)
-                            return
-                        }
-                        this.$message({
-                            type: 'success',
-                            message: this.$t('submitted') + data,
-                            duration: 5000
-                        });
-                    });
-                }).catch(() => {
-                    console.log("cancel deposit")
-                });
-            }
-        },
-        redeem() {
-            if (StringUtils.isBlank(this.wallet)) {
-                this.getAccounts();
-            }
-            agic.getBalanceOf(this.wallet, (error, data) => {
-                if (error != null) {
-                    console.log(error);
+            this.$prompt(this.$t('prompt.content.deposit').toString(), this.$t('prompt.title').toString(), {
+                confirmButtonText: this.$t('prompt.determine'),
+                cancelButtonText: this.$t('prompt.cancel'),
+                inputPattern: /^[0-9]+(.[0-9]{1,18})?$/,
+                inputErrorMessage: this.$t('prompt.inputError')
+            }).then(({value}) => {
+                if (value > this.walletEth) {
+                    this.errorMsg(this.$t('error'), this.$t('notSoMuchETH'));
                     return;
                 }
-                const balanceOf = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
-                if (balanceOf <= 0) {
-                    this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
-                    return;
-                }
-                agic.redeem((error, data) => {
-                    if (error != null) {
-                        console.log(error);
-                        return;
+                agic.doDeposit(value, (err, data) => {
+                    if (err != null) {
+                        console.log(err)
+                        return
                     }
                     this.$message({
                         type: 'success',
@@ -257,8 +242,96 @@ export default {
                         duration: 5000
                     });
                 });
-            })
-
+            }).catch(() => {
+                console.log("cancel deposit")
+            });
+        },
+        redeem() {
+            if (StringUtils.isBlank(this.wallet)) {
+                this.getAccounts();
+            }
+            this.$prompt(this.$t('prompt.content.redeem').toString(), this.$t('prompt.title').toString(), {
+                confirmButtonText: this.$t('prompt.determine'),
+                cancelButtonText: this.$t('prompt.cancel'),
+                inputPattern: /^[0-9]+(.[0-9]{1,18})?$/,
+                inputErrorMessage: this.$t('prompt.inputError')
+            }).then(({value}) => {
+                agic.getBalanceOf(this.wallet, (error, data) => {
+                    if (error != null) {
+                        console.log(error);
+                        return;
+                    }
+                    const balanceOf = new Decimal(data.toNumber()).toNumber();
+                    if (balanceOf <= 0) {
+                        this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
+                        return;
+                    }
+                    agic.redeem(balanceOf, (error, data) => {
+                        if (error != null) {
+                            console.log(error);
+                            return;
+                        }
+                        this.$message({
+                            type: 'success',
+                            message: this.$t('submitted') + data,
+                            duration: 5000
+                        });
+                    });
+                })
+            }).catch(() => {
+                console.log("cancel redeem")
+            });
+        },
+        getTransfer() {
+            this.form.address = '';
+            this.form.amount = '';
+            this.dialogFormVisible = true;
+            if (StringUtils.isBlank(this.wallet)) {
+                this.getAccounts();
+            }
+        },
+        transfer() {
+            this.dialogFormVisible = false;
+            if (StringUtils.isBlank(this.wallet)) {
+                this.getAccounts();
+            }
+            const amountPattern = /^[0-9]+(.[0-9]{1,18})?$/;
+            const amountRe = new RegExp(amountPattern);
+            if (!amountRe.test(this.form.amount)) {
+                this.errorMsg(this.$t('error'), this.$t('prompt.inputError'));
+                return;
+            }
+            const addressPattern = /^0x[a-fA-F0-9]{40}$/;
+            const addressRe = new RegExp(addressPattern);
+            if (!addressRe.test(this.form.address)) {
+                this.errorMsg(this.$t('error'), this.$t('prompt.inputError'));
+                return;
+            }
+            agic.getBalanceOf(this.wallet, (error, data) => {
+                if (error != null) {
+                    console.log(error);
+                    return;
+                }
+                const balanceOf = new Decimal(data.toNumber()).toNumber();
+                const amount = new Decimal(this.form.amount).mul(1e18).toNumber();
+                if (balanceOf <= amount) {
+                    this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
+                    return;
+                }
+                //0xAC49FDC6487466a075761E5F44D694BD5a3740EB
+                agic.transfer(this.form.address, amount, (error, data) => {
+                    if (error != null) {
+                        console.log(error);
+                        return;
+                    }
+                    console.log(data);
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: this.$t('submitted') + data,
+                    //     duration: 5000
+                    // });
+                });
+            });
         },
         errorMsg(title, text) {
             this.$notify.error({
@@ -274,7 +347,10 @@ export default {
 
 @media screen and (max-width: 500px) {
     .el-message-box {
-        width: 80% !important;
+        width: 90% !important;
+    }
+    .el-dialog {
+        width: 95% !important;
     }
 }
 
@@ -300,6 +376,12 @@ export default {
 
     font-size: 0.25rem;
     padding-top: 0.25rem;
+    padding-left: 5px;
+
+    .el-button {
+        font-size: 0.2rem;
+        padding: 0.1rem 0.15rem;
+    }
 
 }
 

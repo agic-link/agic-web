@@ -60,6 +60,10 @@ export function getInterestAmount(callback) {
     agicInstance.interestAmount(callback);
 }
 
+export function transfer(recipient, amount, callback) {
+    agicInstance.transfer(recipient, amount, callback);
+}
+
 //todo 结合返回的订单id进行记录
 export function doDeposit(value, callback) {
     if (value > 0) {
@@ -69,6 +73,6 @@ export function doDeposit(value, callback) {
     }
 }
 
-export function redeem(callback) {
-    agicInstance.redeem(callback);
+export function redeem(agic, callback) {
+    agicInstance.redeem(agic, callback);
 }

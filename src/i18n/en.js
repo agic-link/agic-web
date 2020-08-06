@@ -5,6 +5,9 @@ const en = {
     getAgic: 'Get AGIC',
     redeemEth: 'Redeem ETH',
     pledgeEth: 'Pledge ETH',
+    transfer: 'Transfer',
+    recipient: 'Recipient',
+    amount: 'Agic amount',
     totalSupply: 'Total Supply',
     userInfo: 'Your Info',
     walletBalance: 'Wallet Balance',
@@ -12,11 +15,14 @@ const en = {
     nowEth: 'Now ETH',
     interest: 'Interest',
     prompt: {
-        content: 'Please enter the amount of pledge ETH',
-        title: '',
         determine: 'OK',
         cancel: 'Cancel',
-        inputError: 'Incorrect quantity format'
+        inputError: 'Incorrect format',
+        title: '',
+        content: {
+            deposit: 'Please enter the amount of pledge ETH',
+            redeem: 'Please enter the Agic quantity'
+        }
     },
     notSoMuchETH: 'Not so much ETH',
     notSoMuchBalance: 'Not so much Balance',
@@ -27,6 +33,6 @@ const en = {
     developer: 'Developer',
     social: 'Social',
     error: 'error',
-    network:'Now only Ropsten NetWork is connected'
+    network: 'Now only Ropsten NetWork is connected'
 }
 export default en;

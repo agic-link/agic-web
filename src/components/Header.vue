@@ -46,7 +46,6 @@ export default {
         chainChanged(networkId) {
             this.network = new Decimal(networkId).toString();
             this.networkName = agic.getNetworkName(this.network);
-            sessionStorage.setItem("network", this.network);
         },
         getAccounts() {
             agic.getAddress((error, result) => {
@@ -56,7 +55,6 @@ export default {
                 }
                 this.wallet = result.result[0];
                 this.shortWallet = StringUtils.shortenKey(this.wallet);
-                sessionStorage.setItem("wallet", this.wallet);
                 agic.getNetwork((error, result) => {
                     if (error != null) {
                         console.error(error.message);
@@ -64,7 +62,6 @@ export default {
                     }
                     this.network = new Decimal(result.result).toString();
                     this.networkName = agic.getNetworkName(this.network);
-                    sessionStorage.setItem("network", this.network);
                 });
             });
         }

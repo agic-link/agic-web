@@ -4,6 +4,9 @@ const zh = {
     title: '质押获得的agic会自动生息，同时也可以使用agic再次去交易',
     getAgic: '获得AGIC',
     redeemEth: '赎回ETH',
+    transfer: '交易',
+    recipient: '接收者',
+    amount: 'agic数量',
     pledgeEth: '质押eth',
     totalSupply: '总铸币',
     userInfo: '您的信息',
@@ -12,11 +15,14 @@ const zh = {
     nowEth: '当前eth',
     interest: '利息',
     prompt: {
-        content: '请输入质押eth数量',
         title: '',
         determine: '确定',
         cancel: '取消',
-        inputError: '数量格式不正确'
+        inputError: '格式不正确',
+        content :{
+            deposit: '请输入质押Eth数量',
+            redeem: '请输入Agic数量'
+        },
     },
     notSoMuchETH: '没有那么多eth',
     notSoMuchBalance: '当前账户没有余额',
