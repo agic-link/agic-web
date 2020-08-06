@@ -119,13 +119,13 @@ export default {
         return {
             network: 0,
             wallet: '',
-            totalPledgeEth: 0,
-            totalSupply: 0,
-            walletEth: 0,
-            pledgeEth: 0,
-            balanceOf: 0,
-            interests: 0,
-            nowPledgeEth: 0,
+            totalPledgeEth: "0",
+            totalSupply: "0",
+            walletEth: "0",
+            pledgeEth: "0",
+            balanceOf: "0",
+            interests: "0",
+            nowPledgeEth: "0",
             dialogFormVisible: false,
             form: {
                 address: '',
@@ -138,10 +138,10 @@ export default {
         getData() {
             if (agic.agicInstance !== undefined) {
                 agic.totalSupply((err, data) => {
-                    this.totalSupply = data / 1e18;
+                    this.totalSupply = (data / 1e18).toFixed(18);
                 });
                 agic.totalPledgeEth((err, data) => {
-                    this.totalPledgeEth = data / 1e18;
+                    this.totalPledgeEth = (data / 1e18).toFixed(18);
                 });
             }
         },
@@ -165,7 +165,7 @@ export default {
                         console.log(error);
                         return;
                     }
-                    this.walletEth = new Decimal(data.result).dividedBy(1e18).toNumber();
+                    this.walletEth = new Decimal(data.result).dividedBy(1e18).toFixed(18);
                 })
             }
             if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
@@ -174,23 +174,24 @@ export default {
                         console.log(error);
                         return;
                     }
-                    this.balanceOf = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
-                    this.nowPledgeEth = this.balanceOf / 4;
+                    this.balanceOf = new Decimal(data.toNumber()).dividedBy(1e18).toFixed(18);
+                    this.nowPledgeEth = new Decimal(this.balanceOf).dividedBy(4).toFixed(18)
                 })
                 agic.getPledgeEth(this.wallet, (error, data) => {
                     if (error != null) {
                         console.log(error);
                         return;
                     }
-                    this.pledgeEth = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
+                    this.pledgeEth = new Decimal(data.toNumber()).dividedBy(1e18).toFixed(18);
                 })
-                agic.getInterestAmount((error, data) => {
-                    if (error != null) {
-                        console.log(error);
-                        return;
+                agic.getInterestAmount(this.wallet, (error, data) => {
+                        if (error != null) {
+                            console.log(error);
+                            return;
+                        }
+                        this.interests = new Decimal(data.toNumber()).dividedBy(1e18).toFixed(18);
                     }
-                    this.interests = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
-                })
+                )
             }
         },
         accountsChanged(accounts) {
@@ -254,7 +255,8 @@ export default {
                 confirmButtonText: this.$t('prompt.determine'),
                 cancelButtonText: this.$t('prompt.cancel'),
                 inputPattern: /^[0-9]+(.[0-9]{1,18})?$/,
-                inputErrorMessage: this.$t('prompt.inputError')
+                inputErrorMessage: this.$t('prompt.inputError'),
+                dangerouslyUseHTMLString: true
             }).then(({value}) => {
                 agic.getBalanceOf(this.wallet, (error, data) => {
                     if (error != null) {
@@ -262,11 +264,11 @@ export default {
                         return;
                     }
                     const balanceOf = new Decimal(data.toNumber()).toNumber();
-                    if (balanceOf <= 0) {
+                    if (value > balanceOf) {
                         this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
                         return;
                     }
-                    agic.redeem(balanceOf, (error, data) => {
+                    agic.redeem(value, (error, data) => {
                         if (error != null) {
                             console.log(error);
                             return;

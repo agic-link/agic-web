@@ -56,8 +56,8 @@ export function getPledgeEth(owner, callback) {
     agicInstance.pledgeEth(owner, callback);
 }
 
-export function getInterestAmount(callback) {
-    agicInstance.interestAmount(callback);
+export function getInterestAmount(owner, callback) {
+    agicInstance.interestAmount(owner, callback);
 }
 
 export function transfer(recipient, amount, callback) {
@@ -74,5 +74,9 @@ export function doDeposit(value, callback) {
 }
 
 export function redeem(agic, callback) {
-    agicInstance.redeem(agic, callback);
+    if (agic > 0) {
+        agicInstance.redeem(agic * 1e18, callback);
+    } else {
+        alert("Please be greater than zero");
+    }
 }

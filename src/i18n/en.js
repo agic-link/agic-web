@@ -15,10 +15,10 @@ const en = {
     nowEth: 'Now ETH',
     interest: 'Interest',
     prompt: {
+        title: '',
         determine: 'OK',
         cancel: 'Cancel',
         inputError: 'Incorrect format',
-        title: '',
         content: {
             deposit: 'Please enter the amount of pledge ETH',
             redeem: 'Please enter the Agic quantity'
