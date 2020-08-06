@@ -263,6 +263,7 @@ export default {
                         console.log(error);
                         return;
                     }
+                    //todo 测试如果0.0001可提吗
                     const balanceOf = new Decimal(data.toNumber()).toNumber();
                     if (value > balanceOf) {
                         this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
