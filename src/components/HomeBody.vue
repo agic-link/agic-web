@@ -95,6 +95,7 @@
 <script>
 
 import {Decimal} from "decimal.js";
+import {BigNumber} from "bignumber.js"
 
 const agic = require('../web3/agic.js')
 const StringUtils = require("../util/StringUtils.js")
@@ -119,13 +120,13 @@ export default {
         return {
             network: 0,
             wallet: '',
-            totalPledgeEth: "0",
-            totalSupply: "0",
-            walletEth: "0",
-            pledgeEth: "0",
-            balanceOf: "0",
-            interests: "0",
-            nowPledgeEth: "0",
+            totalPledgeEth: '0',
+            totalSupply: '0',
+            walletEth: '0',
+            pledgeEth: '0',
+            balanceOf: '0',
+            interests: '0',
+            nowPledgeEth: '0',
             dialogFormVisible: false,
             form: {
                 address: '',
@@ -138,10 +139,10 @@ export default {
         getData() {
             if (agic.agicInstance !== undefined) {
                 agic.totalSupply((err, data) => {
-                    this.totalSupply = (data / 1e18).toFixed(18);
+                    this.totalSupply = new BigNumber(data).div(1e18).toFixed();
                 });
                 agic.totalPledgeEth((err, data) => {
-                    this.totalPledgeEth = (data / 1e18).toFixed(18);
+                    this.totalPledgeEth = new BigNumber(data).div(1e18).toFixed();
                 });
             }
         },
@@ -165,7 +166,8 @@ export default {
                         console.log(error);
                         return;
                     }
-                    this.walletEth = new Decimal(data.result).dividedBy(1e18).toFixed(18);
+                    const s = new Decimal(data.result).dividedBy(1e18).toNumber();
+                    this.walletEth = new BigNumber(s).toFixed();
                 })
             }
             if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
@@ -174,22 +176,25 @@ export default {
                         console.log(error);
                         return;
                     }
-                    this.balanceOf = new Decimal(data.toNumber()).dividedBy(1e18).toFixed(18);
-                    this.nowPledgeEth = new Decimal(this.balanceOf).dividedBy(4).toFixed(18)
+                    const s = new Decimal(data.toNumber()).dividedBy(1e18).toNumber()
+                    this.balanceOf = new BigNumber(s).toFixed();
+                    this.nowPledgeEth = new BigNumber(s).div(4).toFixed();
                 })
                 agic.getPledgeEth(this.wallet, (error, data) => {
                     if (error != null) {
                         console.log(error);
                         return;
                     }
-                    this.pledgeEth = new Decimal(data.toNumber()).dividedBy(1e18).toFixed(18);
+                    const s = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
+                    this.pledgeEth = new BigNumber(s).toFixed();
                 })
                 agic.getInterestAmount(this.wallet, (error, data) => {
                         if (error != null) {
                             console.log(error);
                             return;
                         }
-                        this.interests = new Decimal(data.toNumber()).dividedBy(1e18).toFixed(18);
+                        const s = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
+                        this.interests = new BigNumber(s).toFixed();
                     }
                 )
             }
@@ -199,10 +204,10 @@ export default {
             if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
                 this.getBalanceOf();
             } else {
-                this.balanceOf = 0;
-                this.pledgeEth = 0;
-                this.nowPledgeEth = 0;
-                this.interests = 0;
+                this.balanceOf = '0';
+                this.pledgeEth = '0';
+                this.nowPledgeEth = '0';
+                this.interests = '0';
             }
         },
         chainChanged(networkId) {
@@ -212,10 +217,10 @@ export default {
             if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
                 this.getBalanceOf();
             } else {
-                this.balanceOf = 0;
-                this.pledgeEth = 0;
-                this.nowPledgeEth = 0;
-                this.interests = 0;
+                this.balanceOf = '0';
+                this.pledgeEth = '0';
+                this.nowPledgeEth = '0';
+                this.interests = '0';
             }
         },
         deposit() {
@@ -263,7 +268,6 @@ export default {
                         console.log(error);
                         return;
                     }
-                    //todo 测试如果0.0001可提吗
                     const balanceOf = new Decimal(data.toNumber()).toNumber();
                     if (value > balanceOf) {
                         this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
