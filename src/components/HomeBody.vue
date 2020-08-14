@@ -105,7 +105,6 @@ export default {
     created() {
         agic.checkMetamask();
         this.getData();
-        console.log(ethereum)
         ethereum.on('accountsChanged', this.accountsChanged);
         ethereum.on('chainChanged', this.chainChanged);
         ethereum.on('disconnect', this.disconnect);
