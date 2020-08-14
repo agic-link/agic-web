@@ -105,8 +105,10 @@ export default {
     created() {
         agic.checkMetamask();
         this.getData();
+        console.log(ethereum)
         ethereum.on('accountsChanged', this.accountsChanged);
         ethereum.on('chainChanged', this.chainChanged);
+        ethereum.on('disconnect', this.disconnect);
     },
     mounted() {
         this.timer = setInterval(this.getData, 2000);
@@ -136,6 +138,14 @@ export default {
         }
     },
     methods: {
+        disconnect() {
+            this.wallel = '';
+            this.walletEth = '0';
+            this.pledgeEth = '0';
+            this.balanceOf = '0';
+            this.interests = '0';
+            this.nowPledgeEth = '0';
+        },
         getData() {
             if (agic.agicInstance !== undefined) {
                 agic.totalSupply((err, data) => {
@@ -169,6 +179,8 @@ export default {
                     const s = new Decimal(data.result).dividedBy(1e18).toNumber();
                     this.walletEth = new BigNumber(s).toFixed();
                 })
+            } else {
+                this.walletEth = '0';
             }
             if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
                 agic.getBalanceOf(this.wallet, (error, data) => {

@@ -9,6 +9,7 @@ export function checkMetamask() {
         alert("Please install the latest version of metamask");
         return;
     }
+    ethereum.autoRefreshOnNetworkChange = false;
     web3 = new Web3(ethereum);
     Agic = web3.eth.contract(config.abi);
     getNetwork((error, result) => {

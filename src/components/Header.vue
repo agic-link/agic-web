@@ -29,6 +29,7 @@ export default {
         agic.checkMetamask();
         ethereum.on('accountsChanged', this.accountsChanged);
         ethereum.on('chainChanged', this.chainChanged);
+        ethereum.on('disconnect', this.disconnect);
     },
     data() {
         return {
@@ -64,6 +65,11 @@ export default {
                     this.networkName = agic.getNetworkName(this.network);
                 });
             });
+        },
+        disconnect() {
+            console.log("断开连接")
+            this.wallel = '';
+            this.shortWallet = '';
         }
     }
 }
