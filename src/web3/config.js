@@ -1,4 +1,4 @@
-const ropsten_address = ("0x87e32F96Fc156ddCfFB36dDc854450E878e55bB2");
+const ropsten_address = ("0xf1786008d99769ee6305561EbB7f79EFbfe0688c");
 const network_list = ({
     "1": "Main",
     "2": "Morden",

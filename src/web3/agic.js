@@ -29,7 +29,7 @@ export function createInstance(network) {
     }
 }
 
-export async function getAddress(callback) {
+export function getAddress(callback) {
     ethereum.sendAsync({method: 'eth_requestAccounts'}, callback);
 }
 
