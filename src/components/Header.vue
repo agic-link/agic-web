@@ -56,6 +56,7 @@ export default {
                 }
                 this.wallet = result.result[0];
                 this.shortWallet = StringUtils.shortenKey(this.wallet);
+                this.$emit("headerWallet", this.wallet);
                 agic.getNetwork((error, result) => {
                     if (error != null) {
                         console.error(error.message);

@@ -102,8 +102,20 @@ const StringUtils = require("../util/StringUtils.js")
 
 export default {
     name: 'HomeBody',
+    props:{
+        bodyWallet: String
+    },
     created() {
-        agic.checkMetamask();
+        if (agic.checkMetamask()) {
+            agic.getNetwork((error, result) => {
+                if (error != null) {
+                    console.error(error.message);
+                    return;
+                }
+                this.network = new Decimal(result.result).toString();
+                this.agicInstance = agic.createInstance(this.network);
+            });
+        }
         this.getData();
         ethereum.on('accountsChanged', this.accountsChanged);
         ethereum.on('chainChanged', this.chainChanged);
@@ -120,7 +132,6 @@ export default {
     data() {
         return {
             network: 0,
-            wallet: '',
             totalPledgeEth: '0',
             totalSupply: '0',
             walletEth: '0',
@@ -133,7 +144,8 @@ export default {
                 address: '',
                 amount: ''
             },
-            formLabelWidth: '100px'
+            formLabelWidth: '100px',
+            agicInstance: undefined
         }
     },
     methods: {
@@ -146,7 +158,7 @@ export default {
             this.nowPledgeEth = '0';
         },
         getData() {
-            if (agic.agicInstance !== undefined) {
+            if (this.agicInstance !== undefined) {
                 agic.totalSupply((err, data) => {
                     this.totalSupply = new BigNumber(data).div(1e18).toFixed();
                 });
@@ -161,16 +173,17 @@ export default {
                     console.log(error.message);
                     return;
                 }
-                this.wallet = result.result[0];
-                agic.createInstance(this.network);
-                if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
+                console.log(this.network)
+                this.bodyWallet = result.result[0];
+                this.agicInstance = agic.createInstance(this.network);
+                if (StringUtils.isNotBlank(this.bodyWallet) && this.agicInstance !== undefined) {
                     this.getBalanceOf();
                 }
             });
         },
         getBalanceOf() {
-            if (StringUtils.isNotBlank(this.wallet)) {
-                agic.getWalletBalance(this.wallet, (error, data) => {
+            if (StringUtils.isNotBlank(this.bodyWallet)) {
+                agic.getWalletBalance(this.bodyWallet, (error, data) => {
                     if (error != null) {
                         console.log(error);
                         return;
@@ -181,8 +194,8 @@ export default {
             } else {
                 this.walletEth = '0';
             }
-            if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
-                agic.getBalanceOf(this.wallet, (error, data) => {
+            if (StringUtils.isNotBlank(this.bodyWallet) && this.agicInstance !== undefined) {
+                agic.getBalanceOf(this.bodyWallet, (error, data) => {
                     if (error != null) {
                         console.log(error);
                         return;
@@ -191,7 +204,7 @@ export default {
                     this.balanceOf = new BigNumber(s).toFixed();
                     this.nowPledgeEth = new BigNumber(s).div(4).toFixed();
                 })
-                agic.getPledgeEth(this.wallet, (error, data) => {
+                agic.getPledgeEth(this.bodyWallet, (error, data) => {
                     if (error != null) {
                         console.log(error);
                         return;
@@ -199,7 +212,7 @@ export default {
                     const s = new Decimal(data.toNumber()).dividedBy(1e18).toNumber();
                     this.pledgeEth = new BigNumber(s).toFixed();
                 })
-                agic.getInterestAmount(this.wallet, (error, data) => {
+                agic.getInterestAmount(this.bodyWallet, (error, data) => {
                         if (error != null) {
                             console.log(error);
                             return;
@@ -211,8 +224,8 @@ export default {
             }
         },
         accountsChanged(accounts) {
-            this.wallet = accounts[0];
-            if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
+            this.bodyWallet = accounts[0];
+            if (StringUtils.isNotBlank(this.bodyWallet) && this.agicInstance !== undefined) {
                 this.getBalanceOf();
             } else {
                 this.balanceOf = '0';
@@ -222,10 +235,10 @@ export default {
             }
         },
         chainChanged(networkId) {
-            this.network = new Decimal(networkId).toNumber();
-            agic.createInstance(this.network);
+            this.network = new Decimal(networkId).toString();
+            this.agicInstance = agic.createInstance(this.network);
             this.getData()
-            if (StringUtils.isNotBlank(this.wallet) && agic.agicInstance !== undefined) {
+            if (StringUtils.isNotBlank(this.bodyWallet) && this.agicInstance !== undefined) {
                 this.getBalanceOf();
             } else {
                 this.balanceOf = '0';
@@ -235,7 +248,7 @@ export default {
             }
         },
         deposit() {
-            if (StringUtils.isBlank(this.wallet)) {
+            if (StringUtils.isBlank(this.bodyWallet)) {
                 this.getAccounts();
             }
             this.$prompt(this.$t('prompt.content.deposit').toString(), this.$t('prompt.title').toString(), {
@@ -264,7 +277,7 @@ export default {
             });
         },
         redeem() {
-            if (StringUtils.isBlank(this.wallet)) {
+            if (StringUtils.isBlank(this.bodyWallet)) {
                 this.getAccounts();
             }
             this.$prompt(this.$t('prompt.content.redeem').toString(), this.$t('prompt.title').toString(), {
@@ -274,7 +287,7 @@ export default {
                 inputErrorMessage: this.$t('prompt.inputError'),
                 dangerouslyUseHTMLString: true
             }).then(({value}) => {
-                agic.getBalanceOf(this.wallet, (error, data) => {
+                agic.getBalanceOf(this.bodyWallet, (error, data) => {
                     if (error != null) {
                         console.log(error);
                         return;
@@ -304,13 +317,13 @@ export default {
             this.form.address = '';
             this.form.amount = '';
             this.dialogFormVisible = true;
-            if (StringUtils.isBlank(this.wallet)) {
+            if (StringUtils.isBlank(this.bodyWallet)) {
                 this.getAccounts();
             }
         },
         transfer() {
             this.dialogFormVisible = false;
-            if (StringUtils.isBlank(this.wallet)) {
+            if (StringUtils.isBlank(this.bodyWallet)) {
                 this.getAccounts();
             }
             const amountPattern = /^[0-9]+(.[0-9]{1,18})?$/;
@@ -325,7 +338,7 @@ export default {
                 this.errorMsg(this.$t('error'), this.$t('prompt.inputError'));
                 return;
             }
-            agic.getBalanceOf(this.wallet, (error, data) => {
+            agic.getBalanceOf(this.bodyWallet, (error, data) => {
                 if (error != null) {
                     console.log(error);
                     return;

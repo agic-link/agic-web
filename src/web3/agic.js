@@ -2,7 +2,7 @@ import config from "./config";
 
 let web3;
 let Agic;
-export let agicInstance;
+let agicInstance;
 
 export function checkMetamask() {
     if (!window.ethereum) {
@@ -12,9 +12,7 @@ export function checkMetamask() {
     ethereum.autoRefreshOnNetworkChange = false;
     web3 = new Web3(ethereum);
     Agic = web3.eth.contract(config.abi);
-    getNetwork((error, result) => {
-        createInstance(result.result);
-    });
+    return true
 }
 
 export function getNetworkName(networkId) {
@@ -27,6 +25,7 @@ export function createInstance(network) {
     } else {
         agicInstance = undefined;
     }
+    return agicInstance;
 }
 
 export function getAddress(callback) {
