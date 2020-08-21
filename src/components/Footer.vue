@@ -19,8 +19,9 @@
             </el-col>
         </el-row>
         <el-row type="flex" justify="center">
-            <el-col :span="6" :offset="18" style="padding-top: 30px">
+            <el-col :span="9" :offset="17" style="padding-top: 30px">
                 <div>
+                    <a style="font-size: 0.17rem;">{{ $i18n.locale === 'zh' ? '语言' : 'language' }}:</a>
                     <el-dropdown @command="handleCommand" trigger="click">
                         <span class="el-dropdown-link">
                             {{ $i18n.locale === 'zh' ? '中文' : 'English' }}
