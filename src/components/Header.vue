@@ -1,20 +1,32 @@
 <template>
-    <el-row type="flex">
-        <el-col :lg="{span:3,offset:2}" :xs="{span:12,offset:1}">
-            <img src="../assets/logo.png" class="img" alt="logo"/>
-            <div class="header-title">AGIC</div>
-        </el-col>
-        <el-col :lg="{span:4,offset:13}" :xs="{span:10,offset:0}">
-            <div class="link-wallet-button">
-                <div v-show="wallet!==''">{{ shortWallet }}</div>
-                <div class="float-right" v-show="wallet!==''">{{ networkName }}</div>
-                <div class="yuan float-right" v-show="wallet!==''"></div>
-                <el-button v-show="wallet===''" type="primary" v-on:click="getAccounts()">
-                    {{ $t('linkWallet') }}
-                </el-button>
-            </div>
-        </el-col>
-    </el-row>
+    <div>
+        <el-row type="flex">
+            <el-col :lg="{span:3,offset:2}" :xs="{span:12,offset:1}">
+                <img src="../assets/logo.png" class="img" alt="logo"/>
+                <div class="header-title">AGIC</div>
+            </el-col>
+            <el-col :lg="{span:4,offset:14}" :xs="{span:10,offset:0}">
+                <div class="link-wallet-button">
+                    <div v-show="wallet!==''">{{ shortWallet }}</div>
+                    <div class="float-right" v-show="wallet!==''">{{ networkName }}</div>
+                    <div class="yuan float-right" v-show="wallet!==''"></div>
+                    <el-button v-show="wallet===''" type="primary" v-on:click="getAccounts()">
+                        {{ $t('linkWallet') }}
+                    </el-button>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row type="flex">
+            <el-col :lg="{span:10,offset:7}" :xs="{span:20,offset:2}">
+                <div class="router">
+                    <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true">
+                        <el-tab-pane :label="$t('tab.index')" name="zhu"></el-tab-pane>
+                        <el-tab-pane :label="$t('tab.history')" name="history"></el-tab-pane>
+                    </el-tabs>
+                </div>
+            </el-col>
+        </el-row>
+    </div>
 </template>
 
 <script>
@@ -36,7 +48,8 @@ export default {
             wallet: '',
             network: '',
             networkName: '',
-            shortWallet: ''
+            shortWallet: '',
+            activeName: 'zhu'
         }
     },
     methods: {
@@ -71,6 +84,9 @@ export default {
             console.log("断开连接")
             this.wallel = '';
             this.shortWallet = '';
+        },
+        handleClick(tab) {
+            console.log(tab.name)
         }
     }
 }
@@ -95,6 +111,11 @@ export default {
         float: right;
         margin-right: 3px;
     }
+}
+
+.router {
+    font-size: 20px;
+    text-align: center;
 }
 
 .img {

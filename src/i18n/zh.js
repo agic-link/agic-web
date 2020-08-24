@@ -19,7 +19,7 @@ const zh = {
         determine: '确定',
         cancel: '取消',
         inputError: '格式不正确',
-        content :{
+        content: {
             deposit: '请输入质押Eth数量',
             redeem: '请输入Agic数量'
         },
@@ -33,6 +33,10 @@ const zh = {
     developer: '开发者',
     social: '社交媒体',
     error: '错误',
-    network:'现在只接入了Ropsten NetWork'
+    network: '现在只接入了Ropsten NetWork',
+    tab: {
+        index: '主页',
+        history: '历史记录'
+    }
 }
 export default zh;

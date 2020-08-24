@@ -386,13 +386,13 @@ export default {
 }
 
 .body-name {
-    padding-top: 30px;
+    padding-top: 20px;
     text-align: center;
     font-size: 0.5rem;
 }
 
 .body-name-introduction {
-    padding-top: 30px;
+    padding-top: 15px;
     text-align: center;
     font-size: 0.3rem;
 }
