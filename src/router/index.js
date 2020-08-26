@@ -1,35 +1,32 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import PrivacyPolicy from '../components/PrivacyPolicy.vue'
 import HomeBody from "@/components/HomeBody";
 import Orders from "@/components/Orders";
+import App from "@/App";
 
 Vue.use(VueRouter)
 
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: Home,
-        children: [
-            {
-                path: '/',
-                name: 'HomeBody',
-                component: HomeBody
-            },
-            {
-                path: '/Orders',
-                name: 'Orders',
-                component: Orders
-            }
-        ]
+        component: App
     },
     {
         path: '/PrivacyPolicy',
         name: 'PrivacyPolicy',
         component: PrivacyPolicy
     },
+    {
+        path: '/HomeBody',
+        name: 'HomeBody',
+        component: HomeBody
+    },
+    {
+        path: '/Orders',
+        name: 'Orders',
+        component: Orders
+    }
 
 ]
 

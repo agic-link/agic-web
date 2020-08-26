@@ -16,11 +16,18 @@
                 </div>
             </el-col>
         </el-row>
+        <el-row ype="flex" justify="center" style="margin-top: 10px">
+            <el-col :span="24">
+                <el-alert style="height: 40px;font-size: 10px" :title="$t('network')" type="warning" center
+                          show-icon>
+                </el-alert>
+            </el-col>
+        </el-row>
         <el-row type="flex">
             <el-col :lg="{span:10,offset:7}" :xs="{span:20,offset:2}">
                 <div class="router">
                     <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true">
-                        <el-tab-pane :label="$t('tab.index')" name="zhu"></el-tab-pane>
+                        <el-tab-pane :label="$t('tab.index')" name="index"></el-tab-pane>
                         <el-tab-pane :label="$t('tab.history')" name="history"></el-tab-pane>
                     </el-tabs>
                 </div>
@@ -38,7 +45,16 @@ import {Decimal} from 'decimal.js';
 export default {
     name: 'Header',
     created() {
-        agic.checkMetamask();
+        if (agic.checkMetamask()) {
+            agic.getNetwork((error, result) => {
+                if (error != null) {
+                    console.error(error.message);
+                    return;
+                }
+                const network = new Decimal(result.result).toString();
+                window.localStorage.setItem('network', network);
+            });
+        }
         ethereum.on('accountsChanged', this.accountsChanged);
         ethereum.on('chainChanged', this.chainChanged);
         ethereum.on('disconnect', this.disconnect);
@@ -49,13 +65,14 @@ export default {
             network: '',
             networkName: '',
             shortWallet: '',
-            activeName: 'zhu'
+            activeName: 'history'
         }
     },
     methods: {
         accountsChanged(accounts) {
             this.wallet = accounts[0] == null ? '' : accounts[0];
             this.shortWallet = StringUtils.shortenKey(this.wallet);
+            window.localStorage.setItem('wallet', this.wallet);
         },
         chainChanged(networkId) {
             this.network = new Decimal(networkId).toString();
@@ -68,8 +85,8 @@ export default {
                     return;
                 }
                 this.wallet = result.result[0];
+                window.localStorage.setItem('wallet', this.wallet);
                 this.shortWallet = StringUtils.shortenKey(this.wallet);
-                this.$emit("headerWallet", this.wallet);
                 agic.getNetwork((error, result) => {
                     if (error != null) {
                         console.error(error.message);
@@ -84,9 +101,14 @@ export default {
             console.log("断开连接")
             this.wallel = '';
             this.shortWallet = '';
+            window.localStorage.removeItem('wallet');
         },
         handleClick(tab) {
-            console.log(tab.name)
+            if (tab.name === 'index') {
+                this.$router.push({path: '/HomeBody'});
+            } else {
+                this.$router.push({path: '/Orders'})
+            }
         }
     }
 }
