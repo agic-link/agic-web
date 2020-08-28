@@ -3,14 +3,13 @@ import VueRouter from 'vue-router'
 import PrivacyPolicy from '../components/PrivacyPolicy.vue'
 import HomeBody from "@/components/HomeBody";
 import Orders from "@/components/Orders";
-import App from "@/App";
 
 Vue.use(VueRouter)
 
 const routes = [
     {
         path: '/',
-        component: App
+        component: HomeBody
     },
     {
         path: '/PrivacyPolicy',

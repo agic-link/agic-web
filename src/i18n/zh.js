@@ -25,7 +25,7 @@ const zh = {
         },
     },
     notSoMuchETH: '没有那么多eth',
-    notSoMuchBalance: '当前账户没有余额',
+    notSoMuchBalance: '当前账户没有那么多余额',
     submitted: '已提交,订单号:',
     resources: '资源',
     privacyPolicy: '隐私政策',

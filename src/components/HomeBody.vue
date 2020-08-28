@@ -89,6 +89,7 @@
 
 import {Decimal} from "decimal.js";
 import {BigNumber} from "bignumber.js"
+import config from "@/config/config";
 
 const agic = require('../web3/agic.js')
 const StringUtils = require("../util/StringUtils.js")
@@ -137,7 +138,7 @@ export default {
             },
             formLabelWidth: '100px',
             agicInstance: undefined,
-            wallet: ''
+            wallet: '',
         }
     },
     methods: {
@@ -267,6 +268,17 @@ export default {
                         message: this.$t('submitted') + data,
                         duration: 5000
                     });
+                    const uri = config.base_url + '/api/deposit';
+                    const saveData = {
+                        transactionHash: data,
+                        created: new Date(),
+                        networkId: this.network
+                    }
+                    this.axios.post(uri, saveData).then((resp) => {
+                        console.log("save success, code: ", resp.status);
+                    }).catch((error) => {
+                        console.log("save error", error);
+                    });
                 });
             }).catch(() => {
                 console.log("cancel deposit")
@@ -289,7 +301,9 @@ export default {
                         return;
                     }
                     const balanceOf = new Decimal(data.toNumber()).toNumber();
-                    if (value > balanceOf) {
+                    const agicValue = new Decimal(value).mul(1e18).toNumber();
+                    console.log(agic)
+                    if (agicValue > balanceOf) {
                         this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
                         return;
                     }
@@ -302,6 +316,19 @@ export default {
                             type: 'success',
                             message: this.$t('submitted') + data,
                             duration: 5000
+                        });
+                        const uri = config.base_url + '/api/deposit';
+                        const saveData = {
+                            transactionHash: data,
+                            created: new Date(),
+                            networkId: this.network,
+                            agicAmount: value * 1e18,
+                            eth: value / 4 * 1e18,
+                        }
+                        this.axios.post(uri, saveData).then((resp) => {
+                            console.log("save success, code: ", resp.status);
+                        }).catch((error) => {
+                            console.log("save error", error);
                         });
                     });
                 })
@@ -345,7 +372,6 @@ export default {
                     this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
                     return;
                 }
-                //0xAC49FDC6487466a075761E5F44D694BD5a3740EB
                 agic.transfer(this.form.address, amount, (error, data) => {
                     if (error != null) {
                         console.log(error);

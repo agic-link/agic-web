@@ -65,7 +65,8 @@ export default {
             network: '',
             networkName: '',
             shortWallet: '',
-            activeName: 'history'
+            activeName: 'index',
+            lastActiveName: ''
         }
     },
     methods: {
@@ -104,6 +105,10 @@ export default {
             window.localStorage.removeItem('wallet');
         },
         handleClick(tab) {
+            if (tab.name === this.lastActiveName) {
+                return;
+            }
+            this.lastActiveName=tab.name;
             if (tab.name === 'index') {
                 this.$router.push({path: '/HomeBody'});
             } else {
