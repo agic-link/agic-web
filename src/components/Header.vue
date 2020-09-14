@@ -29,6 +29,7 @@
                     <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true">
                         <el-tab-pane :label="$t('tab.index')" name="index"></el-tab-pane>
                         <el-tab-pane :label="$t('tab.history')" name="history"></el-tab-pane>
+                        <el-tab-pane label="股权卡" name="card"></el-tab-pane>
                     </el-tabs>
                 </div>
             </el-col>
@@ -108,11 +109,15 @@ export default {
             if (tab.name === this.lastActiveName) {
                 return;
             }
-            this.lastActiveName=tab.name;
+            this.lastActiveName = tab.name;
             if (tab.name === 'index') {
                 this.$router.push({path: '/HomeBody'});
-            } else {
+            }
+            if (tab.name === 'history') {
                 this.$router.push({path: '/Orders'})
+            }
+            if (tab.name === 'card') {
+                this.$router.push({path: '/Card'})
             }
         }
     }

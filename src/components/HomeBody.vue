@@ -100,7 +100,7 @@ export default {
         if (agic.checkMetamask()) {
             agic.getNetwork((error, result) => {
                 if (error != null) {
-                    console.error(error.message);
+                    console.error("Body getNetwork Error", error.message);
                     return;
                 }
                 this.network = new Decimal(result.result).toString();

@@ -3,19 +3,19 @@
         <el-row type="flex" justify="center">
             <el-col :span="8">
                 <div>{{ $t('resources') }}</div>
-                <div class="content" @click="openWindows('/#/PrivacyPolicy')">{{ $t('privacyPolicy') }}</div>
+                <div class="content"><a @click="openWindows('/#/PrivacyPolicy')">{{ $t('privacyPolicy') }}</a></div>
             </el-col>
             <el-col :span="8">
                 <div>{{ $t('developer') }}</div>
-                <div class="content" @click="openWindows('https://github.com/nipeak')">Github</div>
-                <div class="content" @click="openWindows('https://github.com/nipeak/agic-protocol')">
-                    {{ $t('contract') }}
+                <div class="content"><a @click="openWindows('https://github.com/agic-link')">Github</a></div>
+                <div class="content">
+                    <a @click="openWindows('https://github.com/agic-link/agic-protocol')">{{ $t('contract') }}</a>
                 </div>
             </el-col>
             <el-col :span="8">
                 <div>{{ $t('social') }}</div>
-                <div class="content" @click="openWindows('https://discord.gg/jh6a92U')">Discord</div>
-                <div class="content" @click="openWindows('https://t.me/Agiclink')">Telegram</div>
+                <div class="content"><a @click="openWindows('https://discord.gg/jh6a92U')">Discord</a></div>
+                <div class="content"><a @click="openWindows('https://t.me/Agiclink')">Telegram</a></div>
             </el-col>
         </el-row>
         <el-row type="flex" justify="center">
@@ -78,7 +78,10 @@ export default {
         font-size: 0.15rem;
         padding-top: 0.15rem;
         color: #b2bfce;
-        cursor: pointer;
+
+        a {
+            cursor: pointer;
+        }
     }
 }
 
