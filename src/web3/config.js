@@ -16,7 +16,7 @@ export default {
     address:{
         ropsten:{
             agic: "0xc840A15f11Ec52DD6C3ea69dAb231B8846CDa23c",
-            aec: "0xc840A15f11Ec52DD6C3ea69dAb231B8846CDa23c"
+            aec: "0xf59b61be952db69ab18ab29e32857420c62239b6"
         }
     },
     network_list: network_list
