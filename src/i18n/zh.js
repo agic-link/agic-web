@@ -33,7 +33,7 @@ const zh = {
     developer: '开发者',
     social: '社交媒体',
     error: '错误',
-    network: '现在只接入了Ropsten NetWork',
+    network: '现在只接入了Kovan NetWork',
     tab: {
         index: '主页',
         history: '历史记录'

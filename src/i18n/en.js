@@ -33,7 +33,7 @@ const en = {
     developer: 'Developer',
     social: 'Social',
     error: 'error',
-    network: 'Now only Ropsten NetWork is connected',
+    network: 'Now only Kovan NetWork is connected',
     tab: {
         index: 'main',
         history: 'history'

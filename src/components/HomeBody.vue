@@ -21,7 +21,7 @@
       <el-col :lg="{span:8}" :xs="{span:24}">
         <div class="home-button">
           <el-button type="primary" v-on:click="deposit()">{{ $t('getAgic') }}</el-button>
-          <el-button type="primary" v-on:click="redeem()">{{ $t('redeemEth') }}</el-button>
+          <el-button type="primary" v-on:click="withdraw()">{{ $t('redeemEth') }}</el-button>
           <el-button type="primary" @click="getTransfer()">{{ $t('transfer') }}</el-button>
           <el-dialog title="交易" :visible.sync="dialogFormVisible" top="30vh" center>
             <el-form :model="form">
@@ -158,6 +158,9 @@ export default {
         agic.totalPledgeEth((err, data) => {
           this.totalPledgeEth = new BigNumber(data).div(1e18).toFixed();
         });
+      } else {
+        this.totalSupply = 0;
+        this.totalPledgeEth = 0;
       }
     },
     getAccounts() {
@@ -183,7 +186,7 @@ export default {
             return;
           }
           const s = new Decimal(data.result).dividedBy(1e18).toNumber();
-          this.walletEth = new BigNumber(s).toFixed();
+          this.walletEth = new BigNumber(s).toFixed(6);
         })
       } else {
         this.walletEth = '0';
@@ -194,27 +197,22 @@ export default {
             console.log(error);
             return;
           }
+          const ethBalanceOf = new Decimal(data).div(4);
           const s = new Decimal(data).dividedBy(1e18).toNumber()
-          this.balanceOf = new BigNumber(s).toFixed();
-          this.nowPledgeEth = new BigNumber(s).div(4).toFixed();
-        })
-        agic.getPledgeEth(this.wallet, (error, data) => {
-          if (error != null) {
-            console.log(error);
-            return;
-          }
-          const s = new Decimal(data).dividedBy(1e18).toNumber();
-          this.pledgeEth = new BigNumber(s).toFixed();
-        })
-        agic.getInterestAmount(this.wallet, (error, data) => {
-              if (error != null) {
-                console.log(error);
-                return;
-              }
-              const s = new Decimal(data).dividedBy(1e18).toNumber();
-              this.interests = new BigNumber(s).toFixed();
+          this.balanceOf = new BigNumber(s).toFixed(6,1);
+          this.nowPledgeEth = new BigNumber(s).div(4).toFixed(6);
+
+          agic.getPledgeEth(this.wallet, (error, data) => {
+            if (error != null) {
+              console.log(error);
+              return;
             }
-        )
+            const pledgeEth = new Decimal(data);
+            const s = pledgeEth.dividedBy(1e18).toNumber();
+            this.pledgeEth = new BigNumber(s).toFixed(6);
+            this.interests = ethBalanceOf.sub(pledgeEth).dividedBy(1e18).toFixed(6);
+          })
+        })
       }
     },
     accountsChanged(accounts) {
@@ -282,7 +280,7 @@ export default {
         });
       });
     },
-    redeem() {
+    withdraw() {
       if (StringUtils.isBlank(this.wallet)) {
         this.getAccounts();
       }
@@ -300,12 +298,11 @@ export default {
           }
           const balanceOf = new Decimal(data).toNumber();
           const agicValue = new Decimal(value).mul(1e18).toNumber();
-          console.log(agic)
           if (agicValue > balanceOf) {
             this.errorMsg(this.$t('error'), this.$t('notSoMuchBalance'));
             return;
           }
-          agic.redeem(value, (error, data) => {
+          agic.withdraw(this.wallet, agicValue+'', (error, data) => {
             if (error != null) {
               console.log(error);
               return;
@@ -331,7 +328,7 @@ export default {
           });
         })
       }).catch(() => {
-        console.log("cancel redeem")
+        console.log("cancel withdraw")
       });
     },
     getTransfer() {

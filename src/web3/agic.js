@@ -2,7 +2,6 @@ import config from "./config";
 import Web3 from "web3";
 
 let web3;
-let Agic;
 let agicInstance;
 
 export function checkMetamask() {
@@ -11,19 +10,17 @@ export function checkMetamask() {
         return;
     }
     ethereum.autoRefreshOnNetworkChange = false;
-    console.log("ethereum", ethereum)
     web3 = new Web3(ethereum);
-    console.log("web3", web3)
-    // Agic = new web3.eth.Contract(config.abi.agic);
-    return true
+    return true;
 }
 
 export function getNetworkName(networkId) {
-    return config.network_list[networkId];
+    let networkName = config.network_list[networkId];
+    return networkName === undefined ? "unkown" : networkName;
 }
 
 export function createInstance(network) {
-    if (network === '3') {
+    if (network === '42') {
         agicInstance = new web3.eth.Contract(config.abi.agic, config.address.ropsten.agic).methods;
     } else {
         agicInstance = undefined;
@@ -59,27 +56,21 @@ export function getPledgeEth(owner, callback) {
     agicInstance.pledgeEth(owner).call(callback);
 }
 
-export function getInterestAmount(owner, callback) {
-    agicInstance.interestAmount(owner).call(callback);
-}
-
 export function transfer(recipient, amount, callback) {
     agicInstance.transfer(recipient, amount).call(callback);
 }
 
-//todo 结合返回的订单id进行记录
 export function doDeposit(wallet, value, callback) {
     if (value > 0) {
-        console.log(agicInstance)
         agicInstance.deposit().send({from: wallet, value: value * (1e18)}, callback);
     } else {
         alert("Please be greater than zero");
     }
 }
 
-export function redeem(agic, callback) {
+export function withdraw(wallet, agic, callback) {
     if (agic > 0) {
-        agicInstance.redeem(agic * 1e18).call(callback);
+        agicInstance.withdraw(agic).send({from: wallet}, callback);
     } else {
         alert("Please be greater than zero");
     }
