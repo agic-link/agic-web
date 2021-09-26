@@ -33,10 +33,30 @@ const zh = {
     developer: '开发者',
     social: '社交媒体',
     error: '错误',
-    network: '现在只接入了Kovan NetWork',
+    network: '现在只接入了Kovan NetWork作为演示',
     tab: {
         index: '主页',
-        history: '历史记录'
+        history: '历史记录',
+        card: '利息卡'
+    },
+    card: {
+        title: 'AGIC利息卡(Agic Interest Card)',
+        introduce: '每30天可以领取利息资金池中利息卡面额的百分比利息',
+        type: '卡片类型',
+        margin: '剩余',
+        price: '价格',
+        total: '总量',
+        buy: '购买'
+    },
+    orders: {
+        empty: '暂无数据',
+        deposit: '质押',
+        withdraw: '赎回',
+        time: '时间',
+        amount: '数量',
+        transaction: '交易',
+        subPledge: '减掉质押额',
+        fee: '手续费'
     }
 }
 export default zh;

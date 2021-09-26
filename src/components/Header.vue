@@ -29,7 +29,7 @@
           <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true">
             <el-tab-pane :label="$t('tab.index')" name="index"></el-tab-pane>
             <el-tab-pane :label="$t('tab.history')" name="history"></el-tab-pane>
-            <el-tab-pane label="股权卡" name="card"></el-tab-pane>
+            <el-tab-pane :label="$t('tab.card')" name="card"></el-tab-pane>
           </el-tabs>
         </div>
       </el-col>

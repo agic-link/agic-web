@@ -21,7 +21,7 @@ export function getNetworkName(networkId) {
 
 export function createInstance(network) {
     if (network === '42') {
-        agicInstance = new web3.eth.Contract(config.abi.agic, config.address.ropsten.agic).methods;
+        agicInstance = new web3.eth.Contract(config.abi.agic, config.address.kovan.agic).methods;
     } else {
         agicInstance = undefined;
     }
@@ -45,7 +45,7 @@ export function totalSupply(callback) {
 }
 
 export function totalPledgeEth(callback) {
-    agicInstance.totalPledgeEth().call(callback);
+    agicInstance.getTotalPledgeEth().call(callback);
 }
 
 export function getBalanceOf(owner, callback) {
@@ -53,7 +53,7 @@ export function getBalanceOf(owner, callback) {
 }
 
 export function getPledgeEth(owner, callback) {
-    agicInstance.pledgeEth(owner).call(callback);
+    agicInstance.getPledgeEth(owner).call(callback);
 }
 
 export function transfer(recipient, amount, callback) {

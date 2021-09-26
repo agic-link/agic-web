@@ -33,10 +33,30 @@ const en = {
     developer: 'Developer',
     social: 'Social',
     error: 'error',
-    network: 'Now only Kovan NetWork is connected',
+    network: 'Now only Kovan NetWork is connected, As a demonstration',
     tab: {
         index: 'main',
-        history: 'history'
+        history: 'history',
+        card: 'Interest card'
+    },
+    card: {
+        title: 'Agic Interest Card',
+        introduce: 'You can receive the percentage interest of the face value of the interest card in the interest fund pool every 30 days',
+        type: 'Card Type',
+        margin: 'Margin',
+        price: 'Price',
+        total: 'Total',
+        buy: 'Buy'
+    },
+    orders: {
+        empty: 'No data',
+        deposit: 'Deposit',
+        withdraw: 'Withdraw',
+        time: 'Time',
+        amount: 'Amount',
+        transaction: 'Transaction',
+        subPledge: 'Sub Pledge',
+        fee: 'fee'
     }
 }
 export default en;
