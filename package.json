@@ -10,7 +10,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bignumber.js": "^9.0.1",
-    "core-js": "^3.10.1",
+    "core-js": "^3.17.2",
     "decimal.js": "^10.2.1",
     "element-ui": "^2.15.1",
     "vue": "^2.6.12",
