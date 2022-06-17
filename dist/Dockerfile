@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:1.20-alpine
 RUN rm -rf /usr/share/nginx/html/*
 COPY html /usr/share/nginx/html
 COPY cert /cert
